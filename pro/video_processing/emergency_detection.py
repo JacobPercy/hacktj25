@@ -1,3 +1,7 @@
+import os
+
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
 from tensorflow.keras.models import load_model
 import config
 
@@ -9,4 +13,5 @@ class EmergencyDetection:
         if(not(len(frames)==config.LSTM_FRAME_COUNT)):
             return
         pred = self.model.predict(frames)
+        print(type(pred))
         return pred

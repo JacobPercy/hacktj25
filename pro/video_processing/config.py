@@ -26,4 +26,4 @@ EVENT_CLIP_DURATION = 10  # Clip length in seconds (5 seconds before + 5 after e
 # Video encoding settings
 VIDEO_CODEC = "mp4v"  # Codec for saving videos
 FRAME_RATE = 30  # Frames per second for saved videos
-LSTM_FRAME_COUNT = 16
+LSTM_FRAME_COUNT = 64

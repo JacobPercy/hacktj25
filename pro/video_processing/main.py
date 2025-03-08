@@ -10,6 +10,7 @@ from emergency_detection import EmergencyDetection
 import os
 import numpy as np
 import send2trash
+import tensorflow as tf
 
 class SecuritySystem:
     def __init__(self):
@@ -48,11 +49,15 @@ class SecuritySystem:
                 
                 # Update display with detections
                 #frame_display = processed_frame
-                self.past.append(frame)
-                if(len(self.past)==16):
-                    pred = self.emergency_detector.get_conf()
+                updated_frame = cv2.resize(frame, (64, 64), interpolation=cv2.INTER_AREA)  # Correct size
+                updated_frame = updated_frame / 255.0  # Normalize pixel values
+                self.past.append(updated_frame)
+
+                if len(self.past) == 16:
+                    pred = self.emergency_detector.get_conf(self.past)
                     print(pred)
                     self.past = []
+
             
             self.video_storage.write_frame(frame)
 
