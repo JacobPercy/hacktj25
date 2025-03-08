@@ -39,10 +39,10 @@ class PersonDetector:
         os.makedirs('db', exist_ok=True)
         
         # YOLO model (using v8 for person detection)
-        self.yolo_model = YOLO('yolov8n.pt')  # Nano version for performance
+        self.yolo_model = YOLO('yolov8s.pt')  # Nano version for performance
         
         # DeepSORT tracker (with default settings)
-        self.tracker = DeepSort(max_age=30)
+        self.tracker = DeepSort(max_age=60)
         
         # Database setup
         self.engine = sa.create_engine(f'sqlite:///{db_path}')
@@ -70,14 +70,14 @@ class PersonDetector:
         for result in yolo_results:
             boxes = result.boxes
             for box in boxes:
-                # YOLO bounding box
                 x1, y1, x2, y2 = box.xyxy[0]
                 x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
                 
-                # Confidence 
                 conf = float(box.conf[0])
                 
-                # Prepare detection for DeepSORT (x, y, width, height)
+                if conf < 0.8:
+                    continue
+                
                 detections.append(([x1, y1, x2-x1, y2-y1], conf, None))
         
         # Track with DeepSORT

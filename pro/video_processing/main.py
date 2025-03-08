@@ -39,16 +39,16 @@ class SecuritySystem:
             motion_detected = cv2.countNonZero(fgmask) > config.MOTION_THRESHOLD
 
             if motion_detected:
-                #print("Motion detected!")
+                print("Motion detected!")
                 # Process frame for person detection
-                #processed_frame = self.person_detector.detect(frame)
+                processed_frame = self.person_detector.detect(frame)
                 
                 # Optional: Get current person count
-                #person_count = self.person_detector.get_person_count()
-                #print(f"Total unique persons tracked: {person_count}")
+                person_count = self.person_detector.get_person_count()
+                print(f"Total unique persons tracked: {person_count}")
                 
                 # Update display with detections
-                #frame_display = processed_frame
+                frame_display = processed_frame
                 updated_frame = cv2.resize(frame, (64, 64), interpolation=cv2.INTER_AREA)  # Correct size
                 updated_frame = updated_frame / 255.0  # Normalize pixel values
                 self.past.append(updated_frame)

@@ -15,7 +15,7 @@ class VideoStream:
             self.cap = cv2.VideoCapture(config.VIDEO_SOURCE)
         else:
             # Open webcam (device 0, default)
-            self.cap = cv2.VideoCapture(1)
+            self.cap = cv2.VideoCapture(config.CAMERA_INDEX)
         
         # Check if the video capture is opened correctly
         if not self.cap.isOpened():
