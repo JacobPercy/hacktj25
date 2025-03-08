@@ -1,0 +1,9 @@
+opencv-python
+tensorflow
+keras
+numpy
+send2trash
+torch
+sqlalchemy
+deep_sort_realtime
+ultralytics
