@@ -6,6 +6,7 @@ from video_stream import VideoStream
 from person_detection import PersonDetector
 from video_storage import VideoStorage
 from emergency_detection import EmergencyDetection
+#from fire_detection import FireDetection
 import os
 import numpy as np
 import send2trash
@@ -25,6 +26,7 @@ class SecuritySystem:
         self.segment_count = 0
         self.video_storage.start_new_segment(self.segment_count)
         self.emergency_detector = EmergencyDetection()
+        #self.fire_detector = FireDetection()
         self.past = []
 
     def run(self):
@@ -45,18 +47,20 @@ class SecuritySystem:
                 if len(self.past) == config.SEQUENCE_LENGTH:
                     input_sequence = np.array([self.past])
                     prediction = self.emergency_detector.get_conf(input_sequence)
-                    if(not config.DEBUG):
-                        prediction=0.0
+                    
                     if prediction is not None:
                         if first:
                             confidence = prediction[0][0]
                             first = False
                         else:
                             confidence = 0.8*confidence + 0.2*prediction[0][0]
-                        if(config.DEBUG):
-                            print(f"Emergency confidence: {confidence:.4f}")
+                        if(not config.DEBUG):
+                            confidence=0.0
+                        print(f"Emergency confidence: {confidence:.4f}")
                         if confidence > config.EMERGENCY_THRESHOLD:
                             print("Emergency detected!")
+                    #highest_fire_confidence = self.fire_detector.predict(frame)
+                    #print(f"Fire confidence: {highest_fire_confidence:.4f}")
                 
 
             

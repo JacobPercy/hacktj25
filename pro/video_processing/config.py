@@ -1,8 +1,10 @@
 # config.py
 
 # Debug mode flag
-DEBUG = True
+DEBUG = False
 FIGHT = False
+
+FIRE_TEST = True
 
 # Video settings
 CAMERA_INDEX = 0  # 0 for default webcam
@@ -11,6 +13,10 @@ if(FIGHT):
     VIDEO_SOURCE = "fight.mp4"  # Used in debug mode
 else:
     VIDEO_SOURCE = "nofight.mp4"
+
+if(FIRE_TEST):
+    DEBUG = True
+    VIDEO_SOURCE = "fire.mp4"
 
 FRAME_WIDTH = 640  # Width for initial frame capture
 FRAME_HEIGHT = 480  # Height for initial frame capture
