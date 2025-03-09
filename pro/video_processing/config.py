@@ -4,7 +4,7 @@
 DEBUG = False
 FIGHT = False
 
-FIRE_TEST = True
+FIRE_TEST = False
 
 # Video settings
 CAMERA_INDEX = 0  # 0 for default webcam
