@@ -1,8 +1,8 @@
 # config.py
 
 # Debug mode flag
-DEBUG = False
-FIGHT = False
+DEBUG = True
+FIGHT = True
 
 FIRE_TEST = False
 

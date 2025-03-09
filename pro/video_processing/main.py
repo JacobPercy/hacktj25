@@ -55,7 +55,7 @@ class SecuritySystem:
                         else:
                             confidence = 0.8*confidence + 0.2*prediction[0][0]
                         if(not config.DEBUG):
-                            confidence=0.0
+                            confidence= 0.8*confidence
                         print(f"Emergency confidence: {confidence:.4f}")
                         if confidence > config.EMERGENCY_THRESHOLD:
                             print("Emergency detected!")
