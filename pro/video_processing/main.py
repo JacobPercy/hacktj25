@@ -29,13 +29,13 @@ class SecuritySystem:
 
     def run(self):
         while True:
+            first = True
             frame, frame_display = self.video_stream.get_frame()
             if frame is None:
                 break
-
             fgmask = self.fgbg.apply(frame)
             motion_detected = cv2.countNonZero(fgmask) > config.MOTION_THRESHOLD
-
+            confidence = 0.0
             if motion_detected:
                 resized_frame = cv2.resize(frame, (64, 64))
                 normalized_frame = resized_frame / 255.0
@@ -44,15 +44,21 @@ class SecuritySystem:
                     self.past.pop(0)
                 if len(self.past) == config.SEQUENCE_LENGTH:
                     input_sequence = np.array([self.past])
-                    print(f"Input shape: {input_sequence.shape}")
                     prediction = self.emergency_detector.get_conf(input_sequence)
-                    
+                    if(not config.DEBUG):
+                        prediction=0.0
                     if prediction is not None:
-                        confidence = prediction[0][0]
-                        print(f"Emergency confidence: {confidence:.4f}")
+                        if first:
+                            confidence = prediction[0][0]
+                            first = False
+                        else:
+                            confidence = 0.8*confidence + 0.2*prediction[0][0]
+                        if(config.DEBUG):
+                            print(f"Emergency confidence: {confidence:.4f}")
                         if confidence > config.EMERGENCY_THRESHOLD:
-                            cv2.putText(frame_display, f"EMERGENCY: {confidence:.2f}", 
-                                       (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+                            print("Emergency detected!")
+                
+
             
             self.video_storage.write_frame(frame)
 

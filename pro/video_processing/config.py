@@ -1,11 +1,17 @@
 # config.py
 
 # Debug mode flag
-DEBUG = False
+DEBUG = True
+FIGHT = False
 
 # Video settings
 CAMERA_INDEX = 0  # 0 for default webcam
-VIDEO_SOURCE = "video_debug.mp4"  # Used in debug mode
+
+if(FIGHT):
+    VIDEO_SOURCE = "fight.mp4"  # Used in debug mode
+else:
+    VIDEO_SOURCE = "nofight.mp4"
+
 FRAME_WIDTH = 640  # Width for initial frame capture
 FRAME_HEIGHT = 480  # Height for initial frame capture
 DISPLAY_WIDTH = 640  # Width for display
@@ -25,7 +31,7 @@ EVENT_CLIP_DURATION = 10  # Clip length in seconds (5 seconds before + 5 after e
 
 # Video encoding settings
 VIDEO_CODEC = "mp4v"  # Codec for saving videos
-FRAME_RATE = 30  # Frames per second for saved videos
+FRAME_RATE = 15  # Frames per second for saved videos
 LSTM_FRAME_COUNT = 64
 SEQUENCE_LENGTH = 16
-EMERGENCY_THRESHOLD = 0.8
+EMERGENCY_THRESHOLD = 0.95

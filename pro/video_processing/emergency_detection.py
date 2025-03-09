@@ -4,12 +4,8 @@ from tensorflow.keras.models import load_model
 import config
 
 import tensorflow as tf
-print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 import torch
-
-if torch.cuda.is_available():
-    print("CUDA is available.")
 
 class EmergencyDetection:
     def __init__(self):
