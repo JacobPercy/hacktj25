@@ -11,6 +11,7 @@ import os
 import numpy as np
 import send2trash
 import tensorflow as tf
+import requests
 
 class SecuritySystem:
     def __init__(self):
@@ -59,7 +60,7 @@ class SecuritySystem:
                         print(f"Emergency confidence: {confidence:.4f}")
                         if confidence > config.EMERGENCY_THRESHOLD:
                             print("Emergency detected!")
-                            #make a notification call
+                            requests.get("http://10.180.8.138:5001/send_notification")
                             
             
             self.video_storage.write_frame(frame)
