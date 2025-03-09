@@ -28,3 +28,4 @@ VIDEO_CODEC = "mp4v"  # Codec for saving videos
 FRAME_RATE = 30  # Frames per second for saved videos
 LSTM_FRAME_COUNT = 64
 SEQUENCE_LENGTH = 16
+EMERGENCY_THRESHOLD = 0.8
