@@ -2,9 +2,7 @@ import os
 import numpy as np
 from tensorflow.keras.models import load_model
 import config
-
 import tensorflow as tf
-
 import torch
 
 class EmergencyDetection:
