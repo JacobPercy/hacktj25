@@ -59,10 +59,8 @@ class SecuritySystem:
                         print(f"Emergency confidence: {confidence:.4f}")
                         if confidence > config.EMERGENCY_THRESHOLD:
                             print("Emergency detected!")
-                    #highest_fire_confidence = self.fire_detector.predict(frame)
-                    #print(f"Fire confidence: {highest_fire_confidence:.4f}")
-                
-
+                            #make a notification call
+                            
             
             self.video_storage.write_frame(frame)
 
