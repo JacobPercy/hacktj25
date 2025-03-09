@@ -8,14 +8,14 @@ socketio = SocketIO(app)
 @app.route('/send_notification')
 def send_notification():
     print("Sending notification...")
-    socketio.emit('new_notification', {'title': 'Test Notification', 'body': 'This is a test notification.'})
+    socketio.emit('new_notification', {'title': 'Emergency', 'body': 'A fight has been detected!'})
     return "Notification Sent"
 
 # WebSocket event to connect clients
 @socketio.on('connect')
 def handle_connect():
     print("Client connected")
-    emit('new_notification', {'title': 'Welcome!', 'body': 'You are now connected to the Flask server.'})
+    emit('new_notification', {'title': 'Welcome', 'body': 'You are now connected to your SafeStreets security system!'})
 
 # WebSocket event to handle disconnections
 @socketio.on('disconnect')
