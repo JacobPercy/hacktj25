@@ -4,13 +4,14 @@ import threading
 import config
 from video_stream import VideoStream
 from person_detection import PersonDetector
-#from emergency_detection import EmergencyDetector
 from video_storage import VideoStorage
 from emergency_detection import EmergencyDetection
+#from fire_detection import FireDetection
 import os
 import numpy as np
 import send2trash
 import tensorflow as tf
+import requests
 
 class SecuritySystem:
     def __init__(self):
@@ -18,7 +19,6 @@ class SecuritySystem:
         self.video_stream = VideoStream(config.DEBUG)
         
         self.person_detector = PersonDetector()
-        #self.emergency_detector = EmergencyDetector()
         self.video_storage = VideoStorage()
 
         self.fgbg = cv2.createBackgroundSubtractorMOG2()
@@ -27,37 +27,41 @@ class SecuritySystem:
         self.segment_count = 0
         self.video_storage.start_new_segment(self.segment_count)
         self.emergency_detector = EmergencyDetection()
+        #self.fire_detector = FireDetection()
         self.past = []
 
     def run(self):
         while True:
+            first = True
             frame, frame_display = self.video_stream.get_frame()
             if frame is None:
                 break
-
             fgmask = self.fgbg.apply(frame)
             motion_detected = cv2.countNonZero(fgmask) > config.MOTION_THRESHOLD
-
+            confidence = 0.0
             if motion_detected:
-                print("Motion detected!")
-                # Process frame for person detection
-                processed_frame = self.person_detector.detect(frame)
-                
-                # Optional: Get current person count
-                person_count = self.person_detector.get_person_count()
-                print(f"Total unique persons tracked: {person_count}")
-                
-                # Update display with detections
-                frame_display = processed_frame
-                updated_frame = cv2.resize(frame, (64, 64), interpolation=cv2.INTER_AREA)  # Correct size
-                updated_frame = updated_frame / 255.0  # Normalize pixel values
-                self.past.append(updated_frame)
-
-                if len(self.past) == 16:
-                    pred = self.emergency_detector.get_conf(self.past)
-                    print(pred)
-                    self.past = []
-
+                resized_frame = cv2.resize(frame, (64, 64))
+                normalized_frame = resized_frame / 255.0
+                self.past.append(normalized_frame)
+                if len(self.past) > config.SEQUENCE_LENGTH:
+                    self.past.pop(0)
+                if len(self.past) == config.SEQUENCE_LENGTH:
+                    input_sequence = np.array([self.past])
+                    prediction = self.emergency_detector.get_conf(input_sequence)
+                    
+                    if prediction is not None:
+                        if first:
+                            confidence = prediction[0][0]
+                            first = False
+                        else:
+                            confidence = 0.8*confidence + 0.2*prediction[0][0]
+                        if(not config.DEBUG):
+                            confidence= 0.8*confidence
+                        print(f"Emergency confidence: {confidence:.4f}")
+                        if confidence > config.EMERGENCY_THRESHOLD:
+                            print("Emergency detected!")
+                            requests.get("http://10.180.8.138:5001/send_notification")
+                            
             
             self.video_storage.write_frame(frame)
 
